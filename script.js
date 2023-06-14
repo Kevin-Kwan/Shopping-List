@@ -4,6 +4,14 @@ const itemList = document.getElementById('item-list');
 const itemClear = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 
+function displayItems() {
+  const itemsFromStorage = getItemsFromLocalStorage();
+  itemsFromStorage.forEach((item) => {
+    addItemToDOM(item);
+  });
+  checkUI();
+}
+
 function onAddItemSubmit(e) {
   e.preventDefault();
 
@@ -37,20 +45,6 @@ function addItemToDOM(item) {
   itemInput.value = '';
 }
 
-function addItemToStorage(item) {
-  let itemsFromStorage;
-  // check if localStorage already exists for items
-  if (localStorage.getItem('items') === null) {
-    itemsFromStorage = [];
-  } else {
-    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
-  }
-  // add item to the array
-  itemsFromStorage.push(item);
-  // add the array back to localStorage
-  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
-}
-
 function createButton(classes) {
   const button = document.createElement('button');
   button.className = classes;
@@ -62,6 +56,25 @@ function createIcon(classes) {
   const icon = document.createElement('i');
   icon.className = classes;
   return icon;
+}
+
+function addItemToStorage(item) {
+  let itemsFromStorage = getItemsFromLocalStorage();
+  // add item to the array
+  itemsFromStorage.push(item);
+  // add the array back to localStorage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
+
+function getItemsFromLocalStorage() {
+  let itemsFromStorage;
+  // check if localStorage already exists for items
+  if (localStorage.getItem('items') === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+  }
+  return itemsFromStorage;
 }
 
 function removeItem(e) {
@@ -109,10 +122,16 @@ function checkUI() {
   }
 }
 
-// Event Listeners
-itemForm.addEventListener('submit', onAddItemSubmit);
-itemList.addEventListener('click', removeItem);
-itemClear.addEventListener('click', clearItems);
-itemFilter.addEventListener('input', filterItems);
-// Run these on page load
-checkUI();
+// Initialize App
+function init() {
+  // Event Listeners
+  itemForm.addEventListener('submit', onAddItemSubmit);
+  itemList.addEventListener('click', removeItem);
+  itemClear.addEventListener('click', clearItems);
+  itemFilter.addEventListener('input', filterItems);
+  document.addEventListener('DOMContentLoaded', displayItems);
+  // Run these on page load
+  checkUI();
+}
+
+init();
