@@ -27,12 +27,12 @@ function onAddItemSubmit(e) {
 
   // check for edit mode
   if (isEditMode) {
+    const itemToEdit = document.querySelector('.edit-mode');
+    removeItemFromStorage(itemToEdit.textContent);
     if (checkIfItemExists(newItem)) {
       alert('Item already exists!');
       return;
     }
-    const itemToEdit = document.querySelector('.edit-mode');
-    removeItemFromStorage(itemToEdit.textContent);
     itemToEdit.classList.remove('edit-mode');
     itemToEdit.remove();
     isEditMode = false;
@@ -81,7 +81,7 @@ function createIcon(classes) {
 function addItemToStorage(item) {
   let itemsFromStorage = getItemsFromLocalStorage();
   // add item to the array
-  itemsFromStorage.push(item);
+  itemsFromStorage.push(item.toLowerCase());
   // add the array back to localStorage
   localStorage.setItem('items', JSON.stringify(itemsFromStorage));
 }
@@ -108,7 +108,7 @@ function onClickItem(e) {
 
 function checkIfItemExists(item) {
   const itemsFromStorage = getItemsFromLocalStorage();
-  return itemsFromStorage.includes(item);
+  return itemsFromStorage.includes(item.toLowerCase());
 }
 
 function setItemToEdit(item) {
