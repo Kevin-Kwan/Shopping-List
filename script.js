@@ -2,6 +2,7 @@ const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const itemClear = document.getElementById('clear');
+const itemFilter = document.getElementById('filter');
 
 function addItem(e) {
   e.preventDefault();
@@ -14,16 +15,17 @@ function addItem(e) {
     return;
   }
 
-  // add the item
+  // create the item
   const li = document.createElement('li');
   li.appendChild(document.createTextNode(newItem));
 
   const button = createButton('remote-item btn-link text-red');
   li.appendChild(button);
-
+  //Add li to the DOM
   itemList.appendChild(li);
   // clear the value
   itemInput.value = '';
+  checkUI();
   //console.log(li);
 }
 function createButton(classes) {
@@ -42,13 +44,31 @@ function createIcon(classes) {
 function removeItem(e) {
   // Event delegation to target the specific button
   if (e.target.parentElement.classList.contains('remove-item')) {
-    e.target.parentElement.parentElement.remove();
+    if (confirm('Are you sure you want to remove this item?')) {
+      e.target.parentElement.parentElement.remove();
+    }
   }
+  checkUI();
 }
 
 function clearItems(e) {
-  while (itemList.firstChild) {
-    itemList.removeChild(itemList.firstChild);
+  if (confirm('Are you sure you want to clear your list?')) {
+    while (itemList.firstChild) {
+      itemList.removeChild(itemList.firstChild);
+    }
+  }
+  checkUI();
+}
+
+function checkUI() {
+  const items = document.querySelectorAll('li');
+  console.log(items);
+  if (items.length === 0) {
+    itemClear.style.display = 'none';
+    itemFilter.style.display = 'none';
+  } else {
+    itemClear.style.display = 'block';
+    itemFilter.style.display = 'block';
   }
 }
 
@@ -56,3 +76,6 @@ function clearItems(e) {
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 itemClear.addEventListener('click', clearItems);
+
+// Run these on page load
+checkUI();
