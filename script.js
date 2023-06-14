@@ -55,7 +55,7 @@ function onAddItemSubmit(e) {
 function addItemToDOM(item) {
   // create the item
   const li = document.createElement('li');
-  li.appendChild(document.createTextNode(item));
+  li.appendChild(document.createTextNode(item.toLowerCase()));
 
   const button = createButton('remove-item btn-link text-red');
   li.appendChild(button);
@@ -127,7 +127,7 @@ function removeItem(item) {
     // Remove item from DOM
     item.remove();
     //Remove item from storage
-    removeItemFromStorage(item.textContent);
+    removeItemFromStorage(item.textContent.toLowerCase());
     checkUI();
   }
 }
@@ -136,7 +136,7 @@ function removeItemFromStorage(item) {
 
   // Filter out item to be removed
   itemsFromStorage = itemsFromStorage.filter((i) => {
-    return i !== item;
+    return i !== item.toLowerCase();
   });
   // Reset to local storage
   localStorage.setItem('items', JSON.stringify(itemsFromStorage));
