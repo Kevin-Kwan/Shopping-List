@@ -4,7 +4,7 @@ const itemList = document.getElementById('item-list');
 const itemClear = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 
-function addItem(e) {
+function onAddItemSubmit(e) {
   e.preventDefault();
 
   const newItem = itemInput.value;
@@ -15,9 +15,19 @@ function addItem(e) {
     return;
   }
 
+  // Create item to DOM element
+  addItemToDOM(newItem);
+
+  //Add item to local storage
+  addItemToStorage(newItem);
+  checkUI();
+  //console.log(li);
+}
+
+function addItemToDOM(item) {
   // create the item
   const li = document.createElement('li');
-  li.appendChild(document.createTextNode(newItem));
+  li.appendChild(document.createTextNode(item));
 
   const button = createButton('remote-item btn-link text-red');
   li.appendChild(button);
@@ -25,9 +35,22 @@ function addItem(e) {
   itemList.appendChild(li);
   // clear the value
   itemInput.value = '';
-  checkUI();
-  //console.log(li);
 }
+
+function addItemToStorage(item) {
+  let itemsFromStorage;
+  // check if localStorage already exists for items
+  if (localStorage.getItem('items') === null) {
+    itemsFromStorage = [];
+  } else {
+    itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+  }
+  // add item to the array
+  itemsFromStorage.push(item);
+  // add the array back to localStorage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
+
 function createButton(classes) {
   const button = document.createElement('button');
   button.className = classes;
@@ -87,7 +110,7 @@ function checkUI() {
 }
 
 // Event Listeners
-itemForm.addEventListener('submit', addItem);
+itemForm.addEventListener('submit', onAddItemSubmit);
 itemList.addEventListener('click', removeItem);
 itemClear.addEventListener('click', clearItems);
 itemFilter.addEventListener('input', filterItems);
