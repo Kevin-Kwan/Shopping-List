@@ -60,9 +60,23 @@ function clearItems(e) {
   checkUI();
 }
 
+function filterItems(e) {
+  const items = document.querySelectorAll('li');
+  const text = e.target.value.toLowerCase();
+  items.forEach((item) => {
+    const itemName = item.firstChild.textContent.toLowerCase();
+    if (itemName.indexOf(text) != -1) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  //console.log(text);
+}
+
 function checkUI() {
   const items = document.querySelectorAll('li');
-  console.log(items);
+  //console.log(items);
   if (items.length === 0) {
     itemClear.style.display = 'none';
     itemFilter.style.display = 'none';
@@ -76,6 +90,6 @@ function checkUI() {
 itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 itemClear.addEventListener('click', clearItems);
-
+itemFilter.addEventListener('input', filterItems);
 // Run these on page load
 checkUI();
